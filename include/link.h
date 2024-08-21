@@ -100,6 +100,7 @@ struct link_map
     ElfW(Addr) l_addr;		/* Difference between the address in the ELF
 				   file and the addresses in memory.  */
     char *l_name;		/* Absolute file name object was found in.  */
+    // cfy note: 动态段
     ElfW(Dyn) *l_ld;		/* Dynamic section of the shared object.  */
     struct link_map *l_next, *l_prev; /* Chain of loaded objects.  */
 

@@ -108,6 +108,7 @@ versioned_symbol (libc, __dlerror, dlerror, GLIBC_2_34);
 compat_symbol (libdl, __dlerror, dlerror, GLIBC_2_0);
 #endif
 
+// cfy note: dlerror_run 定义
 int
 _dlerror_run (void (*operate) (void *), void *args)
 {

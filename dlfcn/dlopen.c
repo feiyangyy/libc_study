@@ -42,7 +42,7 @@ struct dlopen_args
 # define NS LM_ID_BASE
 #endif
 
-
+// cfy note:实际调用此函数，有点相当于实现了一个装饰器
 static void
 dlopen_doit (void *a)
 {
@@ -59,7 +59,7 @@ dlopen_doit (void *a)
 			     __libc_argc, __libc_argv, __environ);
 }
 
-
+// cfy note: 实现...
 static void *
 dlopen_implementation (const char *file, int mode, void *dl_caller)
 {
@@ -98,6 +98,7 @@ ___dlopen (const char *file, int mode)
 {
   return __dlopen (file, mode, RETURN_ADDRESS (0));
 }
+// 别名
 weak_alias (___dlopen, dlopen)
 static_link_warning (dlopen)
 #endif /* !SHARED */

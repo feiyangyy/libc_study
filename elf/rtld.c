@@ -366,6 +366,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_debug_printf = _dl_debug_printf,
     ._dl_mcount = _dl_mcount,
     ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
+    // cfy note: 函数指针赋值
     ._dl_open = _dl_open,
     ._dl_close = _dl_close,
     ._dl_catch_error = _dl_catch_error,

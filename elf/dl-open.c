@@ -496,6 +496,7 @@ call_dl_init (void *closure)
 static void
 dl_open_worker_begin (void *a)
 {
+  // cfy note: 加载参数
   struct dl_open_args *args = a;
   const char *file = args->file;
   int mode = args->mode;
@@ -760,6 +761,7 @@ dl_open_worker (void *a)
   args->worker_continue = false;
 
   {
+    // cfy note:这里的tls 应该是thread-local-state.
     /* Protects global and module specific TLS state.  */
     __rtld_lock_lock_recursive (GL(dl_load_tls_lock));
 
@@ -778,7 +780,7 @@ dl_open_worker (void *a)
 
   int mode = args->mode;
   struct link_map *new = args->map;
-
+  // cfy note: 注意这里的lazy biding
   /* Run the initializer functions of new objects.  Temporarily
      disable the exception handler, so that lazy binding failures are
      fatal.  */
@@ -793,7 +795,7 @@ dl_open_worker (void *a)
     _dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 		      new->l_name, new->l_ns, new->l_direct_opencount);
 }
-
+// cfy note: 在rtld 中被赋值
 void *
 _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 	  int argc, char *argv[], char *env[])
@@ -802,9 +804,10 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
     /* One of the flags must be set.  */
     _dl_signal_error (EINVAL, file, NULL, N_("invalid mode for dlopen()"));
 
+  // 锁住这个load锁，注意是不是全局的...
   /* Make sure we are alone.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
-
+  // 这个namespace 不知道是不是和kernel的namespace 有关
   if (__glibc_unlikely (nsid == LM_ID_NEWLM))
     {
       /* Find a new namespace.  */
@@ -844,6 +847,7 @@ no more namespaces available for dlmopen()"));
     _dl_signal_error (EINVAL, file, NULL,
 		      N_("invalid target namespace in dlmopen()"));
 
+  // cfy note: 前面可能都是和ns有关(forepaly)，下面是一些配置信息
   struct dl_open_args args;
   args.file = file;
   args.mode = mode;
@@ -855,8 +859,9 @@ no more namespaces available for dlmopen()"));
   args.argc = argc;
   args.argv = argv;
   args.env = env;
-
+  // 使用openworker 来加载
   struct dl_exception exception;
+  // 这里先不管具体的exception做了什么
   int errcode = _dl_catch_exception (&exception, dl_open_worker, &args);
 
 #if defined USE_LDCONFIG && !defined MAP_COPY

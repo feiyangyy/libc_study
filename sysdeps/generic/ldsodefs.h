@@ -663,6 +663,7 @@ struct rtld_global_ro
 				   const ElfW(Sym) **, struct r_scope_elem *[],
 				   const struct r_found_version *, int, int,
 				   struct link_map *);
+   // cfy note: 函数指针...
   void *(*_dl_open) (const char *file, int mode, const void *caller_dlopen,
 		     Lmid_t nsid, int argc, char *argv[], char *env[]);
   void (*_dl_close) (void *map);
